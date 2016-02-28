@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var util = require('util');
+
+
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/test';
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -47,6 +55,21 @@ router.get('/verifyUser', function(req, res, next) {
             if(response.statusCode == 200)
             {
                 authResult = true;
+                FBdata = JSON.parse(body)
+                console.log(util.inspect(FBdata, false, null));
+
+                //connect away
+                MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+                  if (err) throw err;
+                  console.log("Connected to Database");
+
+
+                	//insert record
+                	db.collection('test').insert(FBdata, function(err, records) {
+                		if (err) throw err;
+                		console.log("Record added as "+records[0]._id);
+                	});
+                });
             }
             res.send('Auth Status(1) - ' + authResult );
         }
