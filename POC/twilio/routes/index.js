@@ -13,10 +13,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* Start Tracking the number */
 router.get('/startTracking', function(req, res, next){
 
     console.log('number is' + req.query.contact);
-    
+
     //Send an SMS text message
     client.sendMessage({
         to: userNumber, // Any number Twilio can deliver to
@@ -39,6 +40,7 @@ router.get('/startTracking', function(req, res, next){
     res.send('Done');
 });
 
+/* Send a call to the number */
 router.get('/sendCall', function(req, res, next){
     //Place a phone call, and respond with TwiML instructions from the given URL
     client.makeCall({
